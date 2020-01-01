@@ -1,11 +1,12 @@
 #Hello machine learning
 
-vector_1 = ['Hei','paa','deg','din','gamle','sjokolade']
-vecto_2 = ['Hade','paa','badet','din','gamle','sjokolade']
+print('Velkommen til den store Juletrekningen! Her skal vi bestemme hvem som skal faa hva til jul')
 
-for i in vector_1:
-    for j in vecto_2:
-        string = i + j
-        print(string)
+personer = ['Martin','Andrine','Christian','Marianne','Steinar']
+julegaver = ['Togbillett','iPhone 11','Sokker','Vannflaske','Kattepus','Tesla']
+
+for person in personer:
+    julegave = julegaver(rand(size(julegaver)))
+    print('I aar faar '+person +' i julegave: '  + julegave)
     
 
