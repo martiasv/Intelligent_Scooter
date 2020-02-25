@@ -1,8 +1,6 @@
-The goal is to detect traffic lights and their state in real-time minimizing the computational cost.
 
-Ideas:
-1. feed images containing traffic lights directly to a NN which will output the location and the states of the traffic lights
-2. Feed the images directly to a NN to find the location of the traffic light and use classic computer vision techniques to detect its state (shapes,contours,colors)
-3. Use Haar-features + Adaboost to detect the traffic light, filter the results with a NN to obtain location. Use classic computer vision techniques to detect its state.
+The idea:
 
-To combat noise, use adaptive correlation filters.
+To apply more modern approaches like Faster-CNN, YOLO, and SSD on datasets of trafficlights and compare their performance and computational cost. The goal is to later shrink this into lighter versions running on a Raspberry Pi.
+
+To combat noise, use adaptive correlation filters (?).
