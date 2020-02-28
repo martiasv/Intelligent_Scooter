@@ -32,7 +32,7 @@ labels = ["person", "bicycle", "car", "motorcycle", "airplane", "bus",
    "toaster", "sink", "refrigerator","blender", "book", "clock", "vase", 
    "scissors", "teddy bear", "hair drier", "toothbrush","hair brush"]
 COLORS = np.random.uniform(0, 255, size=(len(labels), 3))
-
+a = 1;
 # load our serialized model from disk
 print("[INFO] loading model...")
 net = cv2.dnn.readNetFromTensorflow('frozen_inference_graph.pb', 'graph.pbtxt')
