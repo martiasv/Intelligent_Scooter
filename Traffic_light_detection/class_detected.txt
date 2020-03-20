@@ -1,1 +1,1 @@
-traffic light: 20.87%,Current time: 10:25:10 and index:9
+person: 80.82%,Current time: 14:31:19 and index:0

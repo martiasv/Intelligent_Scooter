@@ -87,7 +87,7 @@ for i in np.arange(0, detections.shape[2]):
             cv2.putText(frame, label, (startX, y),cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[idx], 2)
             #sobreescribiendo cada classe detectada en un txt
             f = open("class_detected.txt", "w")
-            
+            args["image"]
             f.write("{}: {:.2f}%".format(labels[idx],confidence * 100))
             now = datetime.now()
             current_time = now.strftime("%H:%M:%S")
@@ -107,4 +107,3 @@ cv2.waitKey(0)
 
 # do a bit of cleanup
 cv2.destroyAllWindows()
-

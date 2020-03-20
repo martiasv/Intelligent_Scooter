@@ -3,7 +3,7 @@ import numpy as np
 
 cvNet = cv.dnn.readNetFromTensorflow('frozen_inference_graph.pb', 'graph.pbtxt')
 
-img = cv.imread('example.jpg')
+img = cv.imread('traffic_light_examples/green_close.jpg')
 (h, w) = img.shape[:2]
 cvNet.setInput(cv.dnn.blobFromImage(img, size=(300, 300), swapRB=True, crop=False))
 cvOut = cvNet.forward()

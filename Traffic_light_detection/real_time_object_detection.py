@@ -17,25 +17,26 @@ from datetime import datetime
 #	"bottle", "bus", "car", "cat", "chair", "cow", "diningtable",
 #	"dog", "horse", "motorbike", "person", "pottedplant", "sheep",
 #	"sofa", "train", "tvmonitor"]
-labels = ["person", "bicycle", "car", "motorcycle", "airplane", "bus",
-    "train", "truck", "boat", "traffic light", "fire hydrant", 
-   "street sign","stop sign", "parking meter", "bench", "bird", "cat", "dog", 
-   "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe","hat", 
-   "backpack", "umbrella", "shoe","eye glasses","handbag", "tie", "suitcase", "frisbee", 
-   "skis", "snowboard", "sports ball", "kite", "baseball bat", 
-   "baseball glove", "skateboard", "surfboard", "tennis racket", 
-   "bottle","plate", "wine glass", "cup", "fork", "knife", "spoon", "bowl", 
-   "banana", "apple", "sandwich", "orange", "broccoli", "carrot", 
-   "hot dog", "pizza", "donut", "cake", "chair", "couch", 
-   "potted plant", "bed","mirror", "dining table","window","desk", "toilet", "door","tv", "laptop", 
-   "mouse", "remote", "keyboard", "cell phone", "microwave", "oven", 
-   "toaster", "sink", "refrigerator","blender", "book", "clock", "vase", 
-   "scissors", "teddy bear", "hair drier", "toothbrush","hair brush"]
+#labels = ["person", "bicycle", "car", "motorcycle", "airplane", "bus",
+#    "train", "truck", "boat", "traffic light", "fire hydrant", 
+#   "street sign","stop sign", "parking meter", "bench", "bird", "cat", "dog", 
+#   "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe","hat", 
+#   "backpack", "umbrella", "shoe","eye glasses","handbag", "tie", "suitcase", "frisbee", 
+#   "skis", "snowboard", "sports ball", "kite", "baseball bat", 
+#   "baseball glove", "skateboard", "surfboard", "tennis racket", 
+#   "bottle","plate", "wine glass", "cup", "fork", "knife", "spoon", "bowl", 
+#   "banana", "apple", "sandwich", "orange", "broccoli", "carrot", 
+## "hot dog", "pizza", "donut", "cake", "chair", "couch", 
+ #  "potted plant", "bed","mirror", "dining table","window","desk", "toilet", "door","tv", "laptop", 
+ #  "mouse", "remote", "keyboard", "cell phone", "microwave", "oven", 
+#   "toaster", "sink", "refrigerator","blender", "book", "clock", "vase", 
+#   "scissors", "teddy bear", "hair drier", "toothbrush","hair brush"]
+labels = ["red","yellow","green"]
 COLORS = np.random.uniform(0, 255, size=(len(labels), 3))
 a = 1;
 # load our serialized model from disk
 print("[INFO] loading model...")
-net = cv2.dnn.readNetFromTensorflow('frozen_inference_graph.pb', 'graph.pbtxt')
+net = cv2.dnn.readNetFromTensorflow('models/ssd_mobilenet_v2_bosch_hro.pb', 'models/ssd_mobilenet_v2_bosch.pbtxt')
 
 # initialize the video stream, allow the cammera sensor to warmup,
 # and initialize the FPS counter
