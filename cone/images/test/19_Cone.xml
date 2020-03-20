@@ -1,0 +1,26 @@
+<annotation>
+	<folder>images</folder>
+	<filename>19_Cone.jpg</filename>
+	<path>C:\Users\Alex\Desktop\images\19_Cone.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>800</width>
+		<height>600</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Cone</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>183</xmin>
+			<ymin>63</ymin>
+			<xmax>275</xmax>
+			<ymax>261</ymax>
+		</bndbox>
+	</object>
+</annotation>
