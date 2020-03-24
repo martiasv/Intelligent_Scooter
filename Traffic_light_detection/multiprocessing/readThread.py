@@ -2,8 +2,8 @@ from threading import Thread
 import cv2
 import queue
 import imutils
+import time
 
-#we need to put them in a fifo queue!!
 class readFromThread:
     def __init__(self, src=0):
         # initialize the video camera stream and read the first frame
@@ -14,8 +14,8 @@ class readFromThread:
         # be stopped
         self.stopped = False
         #Initialize the FIFO queue for the frames
-        self.frameQueue = queue.Queue()
-        self.frameQueue.put(self.frame)
+        #self.frameQueue = queue.Queue()
+        #self.frameQueue.put(self.frame)
     def start(self):
 		# start the thread to read frames from the video stream
         Thread(target=self.update, args=()).start()
@@ -27,12 +27,13 @@ class readFromThread:
             if self.stopped:
                 return
 			# otherwise, read the next frame from the stream
-            (self.grabbed, self.frame) = self.stream.read()
-            self.frameQueue.put(self.frame)
+            (self.grabbed, self.frameGrab) = self.stream.read()
+            #self.frameQueue.put(imutils.resize(self.frame, width=300))
+            self.frame = imutils.resize(self.frameGrab, width=300)
 
     def read(self):
 		# return the frame most recently read
-        return imutils.resize(self.frameQueue.get(), width=300)
+        return self.frame
         #return self.frameQueue.get()
     def stop(self):
 		# indicate that the thread should be stopped

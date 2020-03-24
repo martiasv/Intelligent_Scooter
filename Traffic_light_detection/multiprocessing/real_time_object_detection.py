@@ -2,12 +2,13 @@
 # python real_time_object_detection.py --prototxt MobileNetSSD_deploy.prototxt.txt --model MobileNetSSD_deploy.caffemodel
 # python3 real_time_object_detection.py --prototxt graph.pbtxt --model frozen_inference_graph.pb
 # import the necessary packages
-# threading: python3 real_time_object_detection.py --prototxt graph.pbtxt --model frozen_inference_graph.pb --num-frames 2600 --display 1
+# threading: python3 real_time_object_detection.py --prototxt graph.pbtxt --model frozen_inference_graph.pb --num-frames 100 --display 1
 
 # FPS before threading: 20.3
 # FPS after threading: 19.7
 from __future__ import print_function
 from readThread import readFromThread
+from deepThread import deepPassThread
 from imutils.video import VideoStream
 from imutils.video import FPS
 import numpy as np
@@ -19,10 +20,10 @@ import datetime
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-p", "--prototxt", required=True,
-	help="path to Caffe 'deploy' prototxt file")
-ap.add_argument("-m", "--model", required=True,
-	help="path to Caffe pre-trained model")
+#ap.add_argument("-p", "--prototxt", required=True,
+#	help="path to Caffe 'deploy' prototxt file")
+#ap.add_argument("-m", "--model", required=True,
+#	help="path to Caffe pre-trained model")
 ap.add_argument("-c", "--confidence", type=float, default=0.2,
 	help="minimum probability to filter weak detections")
 ap.add_argument("-n", "--num-frames", type=int, default=100,
@@ -38,7 +39,7 @@ COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
 
 # load our serialized model from disk
 print("[INFO] loading model...")
-net = cv2.dnn.readNetFromTensorflow(args["model"], args["prototxt"])
+net = cv2.dnn.readNetFromTensorflow('frozen_inference_graph.pb', 'graph.pbtxt')
 
 # initialize the video stream, allow the cammera sensor to warmup,
 # and initialize the FPS counter
@@ -51,16 +52,15 @@ net = cv2.dnn.readNetFromTensorflow(args["model"], args["prototxt"])
 # and start the FPS counter
 
 #Where to look
-SRC = 'video.mp4'
-threading =1
+SRC = 0#'video.mp4'
+threading = 1
 
 if threading:
-	print("[INFO] sampling THREADED frames from webcam...")
+	print("[INFO] starting threaded video stream...")
 	vs = readFromThread(src=SRC).start()
 else:
-	# initialize the video stream, allow the cammera sensor to warmup
 	print("[INFO] starting video stream...")
-	vs = VideoStream(src=SRC).start()
+	vs = cv2.VideoCapture(SRC)
 	time.sleep(2.0)
 
 fps = FPS().start()
@@ -72,6 +72,7 @@ while fps._numFrames < args["num_frames"]:
 	# to have a maximum width of 400 pixels
 	start_importim = datetime.datetime.now()
 	frame = vs.read()
+	#imutils.resize(frame, width=300)
 	#if not ret:
 	#	print("[INFO] end of video")
 	#	break
@@ -126,7 +127,9 @@ while fps._numFrames < args["num_frames"]:
 
 # stop the timer and display FPS information
 fps.stop()
-vs.stop()
+if threading:
+	vs.stop()
+
 print("[INFO] elapsed time: {:.2f}".format(fps.elapsed()))
 print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
 
