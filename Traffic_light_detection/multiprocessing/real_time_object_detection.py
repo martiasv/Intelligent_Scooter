@@ -2,10 +2,13 @@
 # python real_time_object_detection.py --prototxt MobileNetSSD_deploy.prototxt.txt --model MobileNetSSD_deploy.caffemodel
 # python3 real_time_object_detection.py --prototxt graph.pbtxt --model frozen_inference_graph.pb
 # import the necessary packages
-# threading: python3 real_time_object_detection.py --prototxt graph.pbtxt --model frozen_inference_graph.pb --num-frames 100 --display 1
+# python3 real_time_object_detection.py --prototxt graph.pbtxt --model frozen_inference_graph.pb --num-frames 100 --display 1
+#python3 real_time_object_detection.py --num-frames 100 --display 1
 
-# FPS before threading: 20.3
+# FPS before threading of video: 20.3
 # FPS after threading: 19.7
+# FPS after threading of webcam: 25 
+# FPS after threading of webcam and neural net: 12.5
 from __future__ import print_function
 from readThread import readFromThread
 from deepThread import deepPassThread
@@ -37,10 +40,6 @@ args = vars(ap.parse_args())
 CLASSES = ["off","green","yellow","red"]
 COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
 
-# load our serialized model from disk
-print("[INFO] loading model...")
-net = cv2.dnn.readNetFromTensorflow('frozen_inference_graph.pb', 'graph.pbtxt')
-
 # initialize the video stream, allow the cammera sensor to warmup,
 # and initialize the FPS counter
 #print("[INFO] starting video stream...")
@@ -52,20 +51,19 @@ net = cv2.dnn.readNetFromTensorflow('frozen_inference_graph.pb', 'graph.pbtxt')
 # and start the FPS counter
 
 #Where to look
-SRC = 0#'video.mp4'
-threading = 1
 
-if threading:
-	print("[INFO] starting threaded video stream...")
-	vs = readFromThread(src=SRC).start()
-else:
-	print("[INFO] starting video stream...")
-	vs = cv2.VideoCapture(SRC)
-	time.sleep(2.0)
+
+
+print("[INFO] starting threaded video stream...")
+vs = readFromThread(src=0).start()
+
+print("[INFO] starting up the neural network...")
+net = deepPassThread().start()
 
 fps = FPS().start()
 
 
+print("[INFO] Running object detection...")
 # loop over the frames from the video stream
 while fps._numFrames < args["num_frames"]:
 	# grab the frame from the threaded video stream and resize it
@@ -85,8 +83,8 @@ while fps._numFrames < args["num_frames"]:
 	# pass the blob through the network and obtain the detections and
 	# predictions
 
-	net.setInput(blob)
-	detections = net.forward()
+	net.submitToNet(blob)
+	detections = net.read()
 	
 	# loop over the detections
 	for i in np.arange(0, detections.shape[2]):
@@ -127,8 +125,8 @@ while fps._numFrames < args["num_frames"]:
 
 # stop the timer and display FPS information
 fps.stop()
-if threading:
-	vs.stop()
+vs.stop()
+net.stop()
 
 print("[INFO] elapsed time: {:.2f}".format(fps.elapsed()))
 print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
