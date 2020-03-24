@@ -31,6 +31,7 @@ from datetime import datetime
  #  "mouse", "remote", "keyboard", "cell phone", "microwave", "oven", 
 #   "toaster", "sink", "refrigerator","blender", "book", "clock", "vase", 
 #   "scissors", "teddy bear", "hair drier", "toothbrush","hair brush"]
+
 labels = ["red","yellow","green"]
 COLORS = np.random.uniform(0, 255, size=(len(labels), 3))
 a = 1;
