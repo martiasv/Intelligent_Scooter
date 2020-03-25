@@ -8,7 +8,12 @@
 # FPS before threading of video: 20.3
 # FPS after threading: 19.7
 # FPS after threading of webcam: 25 
-# FPS after threading of webcam and neural net: 12.5
+
+# FPS after threading of webcam and neural net: 12.5... system monitor shows sporadic bursts..
+# have to change the structure, now it is sending and waiting.. need a cascade approach
+
+#Queues are thread-safe and can be shared between threads!! no need to call a function
+
 from __future__ import print_function
 from readThread import readFromThread
 from deepThread import deepPassThread
@@ -58,7 +63,7 @@ print("[INFO] starting threaded video stream...")
 vs = readFromThread(src=0).start()
 
 print("[INFO] starting up the neural network...")
-net = deepPassThread().start()
+net = deepPassThread(args["confidence"],args["num_frames"]).start()
 
 fps = FPS().start()
 
@@ -83,50 +88,17 @@ while fps._numFrames < args["num_frames"]:
 	# pass the blob through the network and obtain the detections and
 	# predictions
 
-	net.submitToNet(blob)
-	detections = net.read()
-	
-	# loop over the detections
-	for i in np.arange(0, detections.shape[2]):
-		# extract the confidence (i.e., probability) associated with
-		# the prediction
-		confidence = detections[0, 0, i, 2]
-
-		# filter out weak detections by ensuring the `confidence` is
-		# greater than the minimum confidence
-		if confidence > args["confidence"]:
-			# extract the index of the class label from the
-			# `detections`, then compute the (x, y)-coordinates of
-			# the bounding box for the object
-			idx = int(detections[0, 0, i, 1])-1
-			box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-			(startX, startY, endX, endY) = box.astype("int")
-
-			# draw the prediction on the frame
-			label = "{}: {:.2f}%".format(CLASSES[idx],
-				confidence * 100)
-			cv2.rectangle(frame, (startX, startY), (endX, endY),
-				COLORS[idx], 2)
-			y = startY - 15 if startY - 15 > 15 else startY + 15
-			cv2.putText(frame, label, (startX, y),
-				cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[idx], 2)
-
-	# show the output frame
-	cv2.imshow("Frame", frame)
-	key = cv2.waitKey(1) & 0xFF
-
-	# if the `q` key was pressed, break from the loop
-	if key == ord("q"):
-		break
+	net.submitToNet(blob,frame)
 
 	# update the FPS counter
 	fps.update()
 	
 
 # stop the timer and display FPS information
-fps.stop()
 vs.stop()
-net.stop()
+while not net.stopped:
+	time.sleep(0.00001)
+fps.stop()
 
 print("[INFO] elapsed time: {:.2f}".format(fps.elapsed()))
 print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))

@@ -4,6 +4,8 @@ import queue
 import imutils
 import time
 
+#make daemonic?
+
 class readFromThread:
     def __init__(self, src=0):
         # initialize the video camera stream and read the first frame
