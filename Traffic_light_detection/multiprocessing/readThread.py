@@ -5,6 +5,7 @@ import imutils
 import time
 
 #make daemonic?
+#now running from everything, not necessary?
 
 class readFromThread:
     def __init__(self, src=0):
@@ -27,6 +28,7 @@ class readFromThread:
         while True:
 			# if the thread indicator variable is set, stop the thread
             if self.stopped:
+                self.stream.release()
                 return
 			# otherwise, read the next frame from the stream
             (self.grabbed, self.frameGrab) = self.stream.read()

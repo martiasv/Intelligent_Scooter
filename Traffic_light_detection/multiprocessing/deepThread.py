@@ -11,13 +11,12 @@ class deepPassThread:
     def __init__(self,confidence,nr_frames):
         # load our serialized model from disk
         print("[INFO] loading model...")
-        self.net = cv2.dnn.readNetFromTensorflow('frozen_inference_graph.pb', 'graph.pbtxt')
+        self.network = cv2.dnn.readNetFromTensorflow('frozen_inference_graph.pb', 'graph.pbtxt')
         self.stopped = False
         self.waitQueue = queue.Queue()
-        self.doneQueue = queue.Queue()
         self.frameWait = queue.Queue()
-        self.frameSub = queue.Queue()
-        self.pr = threadPrinter(confidence,nr_frames).start()
+        self.pr = threadPrinter(confidence,nr_frames)
+        self.pr.start()
     def start(self):
 		# start the thread to read frames from the video stream
         Thread(target=self.update, args=()).start()
@@ -30,13 +29,8 @@ class deepPassThread:
                 self.stopped = True
                 return
             if not self.waitQueue.empty():
-            #otherwise, do the things
-                self.net.setInput(self.waitQueue.get())
-                self.pr.livePrinting(self.net.forward(),self.frameSub.get())
-  #def read(self):
-        #while self.doneQueue.empty():
-        #    time.sleep(0.00001)
-    #    return self.doneQueue.get()
+                self.network.setInput(self.waitQueue.get())
+                self.pr.submit(self.network.forward(),self.frameWait.get())
 
     def submitToNet(self,blob,frame):
         self.waitQueue.put(blob)
