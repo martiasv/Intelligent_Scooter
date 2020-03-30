@@ -25,6 +25,7 @@ import imutils
 import time
 import cv2
 import datetime
+import time
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
@@ -52,7 +53,7 @@ while fps._numFrames < args["num_frames"]:
 	blob = cv2.dnn.blobFromImage(frame,size=(300, 300), swapRB=True, crop=False)
 
 	net.submitToNet(blob,frame)
-
+	time.sleep(0.3)
 	# update the FPS counter
 	fps.update()
 	
